@@ -1,0 +1,7 @@
+# ignore all generated slides
+generated_*/
+
+# ignore standard python things
+.pytest_cache/
+__pycache__
+venv/

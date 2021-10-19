@@ -19,3 +19,21 @@ Export the images and text into a format that you can then edit later. (maybe a 
 
 In theory this should handle multiple types of PDF exports, given the diff formatting. 
 
+## Tests
+
+```
+python cli.py -s tests/sample-slides.pdf -n tests/sample-notes.pdf 
+```
+
+### How to get outputs
+
+#### Google Slides
+
+* Slides: 
+  * Go to File > Download > PDF Document (.pdf) 
+* Slides and Notes: 
+  * Go to File > Print Settings And Preview
+  * In ribbon: 
+    * select "1 slide with notes"
+    * unselect "Include skipped slides"
+    * click "Download as PDF"
