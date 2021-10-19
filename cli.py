@@ -20,12 +20,26 @@ def generate_data(slides, notes):
     
     with pdfplumber.open(notes) as pdf:
         notes_pages = pdf.pages
-    
-    assert len(slide_pages) == len(notes_pages)
 
+    notes_offset = 0
     for n in range(0, len(slide_pages)):
         slide = slide_pages[n]
-        notes = notes_pages[n]
+        notes = notes_pages[n + notes_offset]
+
+        notes_text = notes.extract_text()
+        slides_text = slide.extract_text()
+
+        # Handle case where notes extend past one page
+        # TODO handle cases where, for some reason, the extract_text changes the slide-render between exports
+        # (eg deployment talk slide 55/notes 56)
+        if slides_text not in notes_text:
+            print(f"Slide {n} doesn't match notes {n + notes_offset}")
+            results_yaml[-1]["text"] += notes_text
+            breakpoint()
+            notes_offset += 1
+            notes_text = notes.extract_text()
+            notes = notes_pages[n + notes_offset]
+
         text = notes.extract_text().replace(slide.extract_text(), "").strip()
         image_fn = Path(IMAGES).joinpath(f"slide_{n}.png")
         slide.to_image().save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
