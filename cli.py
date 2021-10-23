@@ -62,6 +62,7 @@ def generate_data(slides, notes):
 
         # If the notes page doesn't have a box on it, it's overflow
         # TODO only handles one overflow.
+        # TODO investigate tolerance (gs has rects, pp doesn't)
         if not any([x["linewidth"] for x in notes.rects]):
             # print(f"Slide {n} doesn't match notes {n + notes_offset}")
             slides_yaml[-1]["text"] += notes_text

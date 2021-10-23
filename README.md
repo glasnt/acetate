@@ -38,7 +38,7 @@ Options:
 Example from testing data: 
 
 ```
-$ python cli.py -s tests/sample-slides.pdf -n tests/sample-notes.pdf
+$ python cli.py -s samples/google-slides/sample-slides.pdf -n samples/google-slides/sample-notes.pdf
 ```
 
 ## Outputs
@@ -71,6 +71,14 @@ You can customise the HTML output, or use the slides.yaml directly in things lik
     * select "1 slide with notes"
     * unselect "Include skipped slides"
     * click "Download as PDF"
+
+### Microsoft 365 Powerpoint
+
+* Go to File > Print
+* Slides: 
+   * Select "Print Full-page Slides"
+* Slides and Notes:
+   * Sect "Print Notes Pages"
 
 ### Other formats
 
