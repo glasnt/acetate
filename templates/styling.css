@@ -1,0 +1,24 @@
+body {
+    font-family: sans-serif;
+}
+
+.slide {
+    width: 40%;
+}
+
+.slide img {
+    width: 100%;
+    border: 1px solid black;
+}
+
+.notes {
+    width: 60%;
+    padding: 10px;
+    align-items: center;
+    display: flex;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}

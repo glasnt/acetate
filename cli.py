@@ -34,16 +34,20 @@ def generate_data(slides, notes):
     Path(results_dir).joinpath(IMAGES_DIR).mkdir(exist_ok=True)
 
     slides_yaml = []
+    results_yaml = {}
 
     with pdfplumber.open(slides) as pdf:
+        if "Title" in pdf.metadata:
+            title = pdf.metadata["Title"]
+        else:
+            title = Path(slides.name).stem.title()
+        results_yaml["title"] = title
         slide_pages = pdf.pages
 
     with pdfplumber.open(notes) as pdf:
         notes_pages = pdf.pages
 
     notes_offset = 0
-
-    # todo progress tracker
     for n in range(0, len(slide_pages)):
         sys.stderr.write(
             f"\r{n}/{len(slide_pages)} ({round(n/len(slide_pages) * 100)}%)"
@@ -71,7 +75,7 @@ def generate_data(slides, notes):
         slide.to_image().save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
         slides_yaml.append({"image": str(image_fn), "alt": slides_text, "text": text})
 
-    results_yaml = {"title": Path(slides.name).stem.title(), "slides": slides_yaml}
+    results_yaml["slides"] = slides_yaml
 
     with open(results_file, "w") as f:
         yaml.dump(results_yaml, f)
@@ -80,25 +84,23 @@ def generate_data(slides, notes):
     return results_dir
 
 
-def generate_html(data_dir):
+def generate_html(data_dir, css):
     """Given a datafile of generated data, make some pretty HTML
     Not necessarily the complete end result, but a useful preview of the data"""
     with open(Path(data_dir).joinpath(YAML_FILE)) as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)
 
-    styling = """
-    .slide { width: 40%; } 
-    .slide img { width: 100%; border: 1px solid black; }
-    .notes { width: 60%; padding: 10px; align-items: center; display: flex; font-family: sans-serif; }
-    .row {   display: flex;   flex-direction: row;  } 
-    """
 
+    styling = css.read().decode("UTF-8")
+
+    title = data.get("title", "Generated Slides")
     html = [
         f"""<!DOCTYPE html>
     <html lang="en">
-    <title>{data.get('title', "Generated Slides")}</title>
+    <title>{title}</title>
     <style>{styling}</style>
     <body>
+    <h1>{title}</h1>
     <div class='container'>
     """
     ]
@@ -127,9 +129,16 @@ def generate_html(data_dir):
 @click.option(
     "--notes", "-n", help="PDF of slides with speaker notes", type=click.File("rb")
 )
-def pager(slides, notes):
+@click.option(
+    "--css",
+    "-c",
+    help="Optional styling file",
+    type=click.File("rb"),
+    default=Path("templates/styling.css"),
+)
+def pager(slides, notes, css):
     data_dir = generate_data(slides, notes)
-    generate_html(data_dir)
+    generate_html(data_dir, css)
 
 
 if __name__ == "__main__":
