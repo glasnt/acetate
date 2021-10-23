@@ -1,20 +1,39 @@
+import sys
 from pathlib import Path
 
 import click
 import pdfplumber
 import yaml
+from bs4 import BeautifulSoup as bs
 
-IMAGES = "images"
+IMAGES_DIR = "images"
+YAML_FILE = "slides.yaml"
+HTML_FILE = "slides.html"
+
+
+def cleanup_text(text):
+    """Do naive text cleanup
+
+    TODO: make this nicer/customisable
+    """
+
+    # Convert linebreaks to HTML breaks
+    text = text.replace("\n", "<br>")
+
+    # Remove '[CLICK]' actions
+    text = text.replace("[CLICK]", "")
+
+    return text
 
 
 def generate_data(slides, notes):
     """From two files, process into a folder of data"""
     results_dir = f"generated_{Path(slides.name).stem}"
-    results_file = f"{results_dir}/slides.yaml"
+    results_file = f"{results_dir}/{YAML_FILE}"
     Path(results_dir).mkdir(exist_ok=True)
-    Path(results_dir).joinpath(IMAGES).mkdir(exist_ok=True)
+    Path(results_dir).joinpath(IMAGES_DIR).mkdir(exist_ok=True)
 
-    results_yaml = []
+    slides_yaml = []
 
     with pdfplumber.open(slides) as pdf:
         slide_pages = pdf.pages
@@ -26,6 +45,11 @@ def generate_data(slides, notes):
 
     # todo progress tracker
     for n in range(0, len(slide_pages)):
+        sys.stderr.write(
+            f"\r{n}/{len(slide_pages)} ({round(n/len(slide_pages) * 100)}%)"
+        )
+        sys.stderr.flush()
+
         slide = slide_pages[n]
         notes = notes_pages[n + notes_offset]
 
@@ -35,44 +59,67 @@ def generate_data(slides, notes):
         # If the notes page doesn't have a box on it, it's overflow
         # TODO only handles one overflow.
         if not any([x["linewidth"] for x in notes.rects]):
-            print(f"Slide {n} doesn't match notes {n + notes_offset}")
-            results_yaml[-1]["text"] += notes_text
+            # print(f"Slide {n} doesn't match notes {n + notes_offset}")
+            slides_yaml[-1]["text"] += notes_text
             notes_offset += 1
             notes_text = notes.extract_text()
             notes = notes_pages[n + notes_offset]
 
         text = notes_text.replace(slides_text, "", 1).strip()
-        image_fn = Path(IMAGES).joinpath(f"slide_{n}.png")
+        text = cleanup_text(text)
+        image_fn = Path(IMAGES_DIR).joinpath(f"slide_{n}.png")
         slide.to_image().save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
-        results_yaml.append({"image": str(image_fn), "text": text})
+        slides_yaml.append({"image": str(image_fn), "alt": slides_text, "text": text})
+
+    results_yaml = {"title": Path(slides.name).stem.title(), "slides": slides_yaml}
 
     with open(results_file, "w") as f:
         yaml.dump(results_yaml, f)
 
+    print(f"\n\nYAML data saved to {results_file}")
     return results_dir
 
 
 def generate_html(data_dir):
-    """Given a datafile of generated data, make some pretty HTML"""
-    with open(Path(data_dir).joinpath("slides.yaml")) as f:
+    """Given a datafile of generated data, make some pretty HTML
+    Not necessarily the complete end result, but a useful preview of the data"""
+    with open(Path(data_dir).joinpath(YAML_FILE)) as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)
 
+    styling = """
+    .slide { width: 40%; } 
+    .slide img { width: 100%; border: 1px solid black; }
+    .notes { width: 60%; padding: 10px; align-items: center; display: flex; font-family: sans-serif; }
+    .row {   display: flex;   flex-direction: row;  } 
+    """
+
     html = [
-        """<html>
-    <style>
-    img { width: 200px; border: 1px solid black;}
-    .notes { width: 300px; font: sans; }
-    </style>
-    <table>"""
+        f"""<!DOCTYPE html>
+    <html lang="en">
+    <title>{data.get('title', "Generated Slides")}</title>
+    <style>{styling}</style>
+    <body>
+    <div class='container'>
+    """
     ]
 
-    for slide in data:
+    for slide in data["slides"]:
         html.append(
-            f"<tr><td><img src='{slide['image']}' /></td><td class='notes'>{slide['text']}</td></tr>"
+            f"""<div class='row'>
+            <div class='slide'><img alt='{slide['alt']}' src='{slide['image']}' /></div>
+            <div class='notes'>{slide['text']}</div>
+            </div>
+            """
         )
+    html.append("</div></body></html>")
+    html = "\n".join(html)
+    root = bs(html, "html.parser")
+    prettyHTML = root.prettify()
 
-    with open(Path(data_dir).joinpath("slides.html"), "w") as f:
-        f.write("\n".join(html))
+    with open(Path(data_dir).joinpath(HTML_FILE), "w") as f:
+        f.write(prettyHTML)
+
+    print(f"HTML data saved to {data_dir}")
 
 
 @click.command()

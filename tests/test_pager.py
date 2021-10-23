@@ -7,3 +7,4 @@ def test_pager():
   result = runner.invoke(pager, ['-s', 'tests/sample-slides.pdf', '-n', 'tests/sample-notes.pdf'])
   assert result.exit_code == 0
   assert Path("generated_sample-slides").exists()
+  

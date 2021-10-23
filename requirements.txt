@@ -3,3 +3,4 @@ click
 pillow
 pyyaml
 pytest
+beautifulsoup4
