@@ -25,10 +25,37 @@ In theory this should handle multiple types of PDF exports.
 ## Invocation
 
 ```
-python cli.py -s tests/sample-slides.pdf -n tests/sample-notes.pdf 
+$ python cli.py --help
+Usage: cli.py [OPTIONS]
+
+Options:
+  -s, --slides FILENAME  PDF of slides
+  -n, --notes FILENAME   PDF of slides with speaker notes
+  -c, --css FILENAME     Optional styling file
+  --help                 Show this message and exit.
 ```
 
-## How to get outputs
+Example from testing data: 
+
+```
+$ python cli.py -s tests/sample-slides.pdf -n tests/sample-notes.pdf
+```
+
+## Outputs
+
+```
+generated_sample-slides
+├── images 
+│   ├── slide_0.png
+│   ├── slide_1.png
+│   └── ...
+├── slides.html          # an example render
+└── slides.yaml          # generated data
+```
+
+You can customise the HTML output, or use the slides.yaml directly in things like static site generators. 
+
+## How to get slides
 
 ### Google Slides
 
