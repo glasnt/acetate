@@ -69,8 +69,8 @@ def generate_data(slides, notes):
             notes_offset += 1
             notes_text = notes.extract_text()
             notes = notes_pages[n + notes_offset]
-
-        text = notes_text.replace(slides_text, "", 1).strip()
+            
+        text = notes_text.replace(slides_text or "", "", 1).strip()
         text = cleanup_text(text)
         image_fn = Path(IMAGES_DIR).joinpath(f"slide_{n}.png")
         slide.to_image().save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
