@@ -73,7 +73,7 @@ def generate_data(slides, notes):
         text = notes_text.replace(slides_text or "", "", 1).strip()
         text = cleanup_text(text)
         image_fn = Path(IMAGES_DIR).joinpath(f"slide_{n}.png")
-        slide.to_image().save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
+        slide.to_image(resolution=150).save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
         slides_yaml.append({"image": str(image_fn), "alt": slides_text, "text": text})
 
     results_yaml["slides"] = slides_yaml
