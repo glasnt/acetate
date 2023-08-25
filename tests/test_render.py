@@ -8,26 +8,28 @@ from click.testing import CliRunner
 from acetate.cli import cli
 
 SAMPLE_FOLDER = "samples"
-SAMPLES = ["google-slides"]  # , "microsoft-365-powerpoint", "canva"]
+SAMPLES = ["google-slides" , "microsoft-365-powerpoint", "canva"]
 
 SLIDES_FN = "sample-slides.pdf"
 NOTES_FN = "sample-notes.pdf"
 
-GENERATED_FOLDER = "generated"
+GENERATED_FOLDER = Path("pytest_data") 
 
 
 @pytest.mark.parametrize("sample_fn", SAMPLES)
 def test_slides_type(sample_fn):
     runner = CliRunner()
 
-    if Path(GENERATED_FOLDER).exists():
-        shutil.rmtree(GENERATED_FOLDER)
+    output_folder = GENERATED_FOLDER / sample_fn
 
-    folder = Path(SAMPLE_FOLDER) / sample_fn
+    if Path(output_folder).exists():
+        shutil.rmtree(output_folder)
 
-    print(f"acetate -s {Path(folder) / SLIDES_FN} -n {Path(folder) / NOTES_FN}")
+    input_folder = Path(SAMPLE_FOLDER) / sample_fn
+
+    print(f"acetate -s {Path(input_folder) / SLIDES_FN} -n {Path(input_folder) / NOTES_FN} -o {output_folder}")
     result = runner.invoke(
-        cli, ["-s", Path(folder) / SLIDES_FN, "-n", Path(folder) / NOTES_FN]
+        cli, ["-s", Path(input_folder) / SLIDES_FN, "-n", Path(input_folder) / NOTES_FN, "-o", output_folder ]
     )
     assert result.exit_code == 0
     assert Path(GENERATED_FOLDER).exists()
@@ -39,4 +41,3 @@ def test_slides_type(sample_fn):
     assert "Sample Presentation" in html.title.text
     assert "Here is a picture of my dog" in html.body.text
 
-    shutil.move(GENERATED_FOLDER, GENERATED_FOLDER + str(folder).split("/")[-1])
