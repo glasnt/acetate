@@ -1,6 +1,6 @@
 # Acetate
 
-
+![Acetate logo](https://raw.githubusercontent.com/glasnt/acetate/main/docs/acetate.png)
 
 *This code base is considered exceptionally alpha. It will break, and you get to keep the shiny pieces.*
 

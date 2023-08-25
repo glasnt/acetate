@@ -1,9 +1,12 @@
 # ignore all generated slides
 generated_*/
+pytest_data/
 
 # ignore standard python things
 .pytest_cache/
 __pycache__
 venv/
 .vscode/
+
+# ignore acetate things
 acetate.egg-info/

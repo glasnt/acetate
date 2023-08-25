@@ -32,10 +32,10 @@ def test_slides_type(sample_fn):
         cli, ["-s", Path(input_folder) / SLIDES_FN, "-n", Path(input_folder) / NOTES_FN, "-o", output_folder ]
     )
     assert result.exit_code == 0
-    assert Path(GENERATED_FOLDER).exists()
-    assert (Path(GENERATED_FOLDER) / "index.html").exists()
+    assert output_folder.exists()
+    assert (output_folder / "index.html").exists()
 
-    with open(Path(GENERATED_FOLDER) / "index.html") as f:
+    with open(output_folder / "index.html") as f:
         html = bs(f.read(), "html.parser")
 
     assert "Sample Presentation" in html.title.text

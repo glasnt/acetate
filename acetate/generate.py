@@ -15,8 +15,11 @@ from .utils import cleanup_text
 def generate_data(slides, notes, output):
     """From two files, process into a folder of data"""
     results_file = f"{output}/{YAML_FILE}"
-    Path(output).mkdir(exist_ok=True)
-    Path(output).joinpath(IMAGES_DIR).mkdir(exist_ok=True)
+    Path(output).mkdir(
+        exist_ok=True,
+        parents=True,
+    )
+    Path(output).joinpath(IMAGES_DIR).mkdir(exist_ok=True, parents=True)
 
     slides_yaml = []
     results_yaml = {}
