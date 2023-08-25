@@ -32,8 +32,6 @@ setup(
         acetate=acetate.cli:cli
     """,
     install_requires=["click"],
-    extras_require={
-        "test": ["pytest"]
-    },
+    extras_require={"test": ["pytest"]},
     python_requires=">=3.11",
 )

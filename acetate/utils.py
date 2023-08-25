@@ -1,5 +1,3 @@
-
-
 def cleanup_text(text):
     """Do naive text cleanup
 

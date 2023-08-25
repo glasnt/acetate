@@ -8,7 +8,10 @@ from click.testing import CliRunner
 from acetate.cli import cli
 
 SAMPLE_FOLDER = "samples"
-SAMPLES = ["google-slides", "canva", ]#"microsoft-365-powerpoint"
+SAMPLES = [
+    "google-slides",
+    "canva",
+]  # "microsoft-365-powerpoint"
 
 SLIDES_FN = "sample-slides.pdf"
 NOTES_FN = "sample-notes.pdf"
