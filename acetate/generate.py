@@ -1,37 +1,22 @@
-import sys
 from pathlib import Path
-
-import click
+import sys
 import pdfplumber
 import yaml
 from bs4 import BeautifulSoup as bs
 
+
 IMAGES_DIR = "images"
 YAML_FILE = "slides.yaml"
-HTML_FILE = "slides.html"
+HTML_FILE = "index.html"
+
+from .utils import cleanup_text
 
 
-def cleanup_text(text):
-    """Do naive text cleanup
-
-    TODO: make this nicer/customisable
-    """
-
-    # Convert linebreaks to HTML breaks
-    text = text.replace("\n", "<br>")
-
-    # Remove '[CLICK]' actions
-    text = text.replace("[CLICK]", "")
-
-    return text
-
-
-def generate_data(slides, notes):
+def generate_data(slides, notes, output):
     """From two files, process into a folder of data"""
-    results_dir = f"generated_{Path(slides.name).stem}"
-    results_file = f"{results_dir}/{YAML_FILE}"
-    Path(results_dir).mkdir(exist_ok=True)
-    Path(results_dir).joinpath(IMAGES_DIR).mkdir(exist_ok=True)
+    results_file = f"{output}/{YAML_FILE}"
+    Path(output).mkdir(exist_ok=True)
+    Path(output).joinpath(IMAGES_DIR).mkdir(exist_ok=True)
 
     slides_yaml = []
     results_yaml = {}
@@ -69,11 +54,13 @@ def generate_data(slides, notes):
             notes_offset += 1
             notes_text = notes.extract_text()
             notes = notes_pages[n + notes_offset]
-            
+
         text = notes_text.replace(slides_text or "", "", 1).strip()
         text = cleanup_text(text)
         image_fn = Path(IMAGES_DIR).joinpath(f"slide_{n}.png")
-        slide.to_image(resolution=150).save(str(Path(results_dir).joinpath(image_fn)), format="PNG")
+        slide.to_image(resolution=150).save(
+            str(Path(output).joinpath(image_fn)), format="PNG"
+        )
         slides_yaml.append({"image": str(image_fn), "alt": slides_text, "text": text})
 
     results_yaml["slides"] = slides_yaml
@@ -82,7 +69,6 @@ def generate_data(slides, notes):
         yaml.dump(results_yaml, f)
 
     print(f"\n\nYAML data saved to {results_file}")
-    return results_dir
 
 
 def generate_html(data_dir, css):
@@ -90,7 +76,6 @@ def generate_html(data_dir, css):
     Not necessarily the complete end result, but a useful preview of the data"""
     with open(Path(data_dir).joinpath(YAML_FILE)) as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)
-
 
     styling = css.read().decode("UTF-8")
 
@@ -123,24 +108,3 @@ def generate_html(data_dir, css):
         f.write(prettyHTML)
 
     print(f"HTML data saved to {data_dir}")
-
-
-@click.command()
-@click.option("--slides", "-s", help="PDF of slides", type=click.File("rb"))
-@click.option(
-    "--notes", "-n", help="PDF of slides with speaker notes", type=click.File("rb")
-)
-@click.option(
-    "--css",
-    "-c",
-    help="Optional styling file",
-    type=click.File("rb"),
-    default=Path("templates/styling.css"),
-)
-def pager(slides, notes, css):
-    data_dir = generate_data(slides, notes)
-    generate_html(data_dir, css)
-
-
-if __name__ == "__main__":
-    pager()

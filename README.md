@@ -1,8 +1,8 @@
-# Slides Pager
+# 🛝 Acetate
 
 *This code base is considered exceptionally alpha. It will break, and you get to keep the shiny pieces.*
 
-Take two PDFs, generate one HTML.
+Take two PDFs -- one with slides, and one with slides and speaker notes -- and generate one HTML.
 
 Make for a nice format for reading slides in a webpage, allowing for richer interactions etc for people who learn better that way. 
 
@@ -25,8 +25,8 @@ In theory this should handle multiple types of PDF exports.
 ## Invocation
 
 ```
-$ python cli.py --help
-Usage: cli.py [OPTIONS]
+$ python acetate --help
+Usage: acetate [OPTIONS]
 
 Options:
   -s, --slides FILENAME  PDF of slides
@@ -38,19 +38,25 @@ Options:
 Example from testing data: 
 
 ```
-$ python cli.py -s samples/google-slides/sample-slides.pdf -n samples/google-slides/sample-notes.pdf
+$ python acetate \
+    -s samples/google-slides/sample-slides.pdf \
+    -n samples/google-slides/sample-notes.pdf
 ```
 
 ## Outputs
 
 ```
-generated_sample-slides
-├── images 
+$ tree generated
+generated
+├── images
 │   ├── slide_0.png
 │   ├── slide_1.png
-│   └── ...
-├── slides.html          # an example render
-└── slides.yaml          # generated data
+│   ├── slide_2.png
+│   └── slide_3.png
+├── index.html
+└── slides.yaml
+
+2 directories, 6 files
 ```
 
 You can customise the HTML output, or use the slides.yaml directly in things like static site generators. 
