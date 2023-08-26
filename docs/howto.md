@@ -22,8 +22,10 @@ The following instructions are (mostly, pending UI updates) on how to export sli
 * Go to File > Print
 * Slides: 
    * Select "Print Full-page Slides"
+   * Follow download prompts
 * Slides and Notes:
    * Select "Print Notes Pages"
+   * Follow download prompts
 
 ## Canva
 

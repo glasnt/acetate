@@ -31,7 +31,13 @@ setup(
         [console_scripts]
         acetate=acetate.cli:cli
     """,
-    install_requires=["click"],
+    install_requires=[
+        "click",
+        "pdfplumber",
+        "pillow",
+        "pyyaml",
+        "beautifulsoup4",
+    ],
     extras_require={"test": ["pytest"]},
     python_requires=">=3.11",
 )

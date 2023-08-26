@@ -1,6 +1,3 @@
-pdfplumber
-click
-pillow
-pyyaml
+-e . 
+
 pytest
-beautifulsoup4

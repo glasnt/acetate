@@ -2,16 +2,13 @@ import shutil
 from pathlib import Path
 
 import pytest
-from bs4 import BeautifulSoup as bs
 from click.testing import CliRunner
+from test_attributes import check_html_attributes
 
 from acetate.cli import cli
 
 SAMPLE_FOLDER = "samples"
-SAMPLES = [
-    "google-slides",
-    "canva",
-]  # "microsoft-365-powerpoint"
+SAMPLES = ["google-slides", "canva", "microsoft-powerpoint"]
 
 SLIDES_FN = "sample-slides.pdf"
 NOTES_FN = "sample-notes.pdf"
@@ -45,8 +42,4 @@ def test_slides_type(sample_fn):
     assert output_folder.exists()
     assert (output_folder / "index.html").exists()
 
-    with open(output_folder / "index.html") as f:
-        html = bs(f.read(), "html.parser")
-
-    assert "Sample Presentation" in html.title.text
-    assert "Here is a picture of my dog" in html.body.text
+    check_html_attributes(output_folder / "index.html")

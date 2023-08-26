@@ -23,3 +23,7 @@ In most cases, the text of a slide can be completely removed from a text of a no
 However, in cases were text appears on a slide on the utmost left hand side of the page, this can make the text extraction process differ between slide and notes. (The assumption here being because of the placement of the slide on the notes render is inset, there can be instances where the text is read differently.)
 
 In these cases, it's up to the user to remove the text.
+
+## Edge case: Powerpoint title
+
+In the case of Powerpoint, the name of the PDF file is titleized into the title of the PDF, as opposed to the name of the slides in Powerpoint. 
