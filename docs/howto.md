@@ -4,37 +4,45 @@ The following instructions are (mostly, pending UI updates) on how to export sli
 
 ## Google Slides
 
-* Go to File > Print Settings And Preview
-* Slides: 
-  * In ribbon:
-    * select "1 slide without notes"
-    * unselect "Include skipped slides"
-    * click "Download as PDF"
+Use the **File** > **Print Preview** menu.
 
-* Slides and Notes: 
-  * In ribbon: 
-    * select "1 slide with notes"
-    * unselect "Include skipped slides"
-    * click "Download as PDF"
+Generate Slides:
+
+- Using the options in the top ribbon:
+  - Select "1 slide without notes"
+  - Confirm "Include skipped slides" is unselected
+  - Click "Download as PDF"
+
+Generarte Slides and Notes:
+
+- Using the options in the top ribbon:
+  - Select "1 slide with notes"
+  - Confirm "Include skipped slides" is unselected
+  - click "Download as PDF"
 
 ## Microsoft 365 Powerpoint
 
-* Go to File > Print
-* Slides: 
-   * Select "Print Full-page Slides"
-   * Follow download prompts
-* Slides and Notes:
-   * Select "Print Notes Pages"
-   * Follow download prompts
+Generate Slides:
+
+- **File** > **Print** > **Print full page slides**
+- Click **Save**
+
+Generate Slides and Notes:
+
+- **File** > **Print** > **Print slides and notes**
+- Click **Save**
 
 ## Canva
 
-* Go to File > Download
-* Slides: 
-   * Click "Download"
-* Slides and Notes: 
-   * Select "Include notes"
-   * Click "Download"
+Use the **File** > **Download** menu.
+
+- Slides:
+  - Keep defaults.
+  - Click **Download**
+- Slides and Notes:
+  - Expand "Advanced Settings"
+  - Select "Include notes"
+  - Click **Download**
 
 ## Other formats
 
