@@ -76,3 +76,29 @@ def test_slides_type_2026(sample_fn):
     assert (output_folder / "index.html").exists()
 
     check_html_attributes(output_folder / "index.html")
+
+
+def test_slides_overflow():
+    runner = CliRunner()
+
+    output_folder = GENERATED_FOLDER / "overflow"
+
+    if Path(output_folder).exists():
+        shutil.rmtree(output_folder)
+
+    input_folder = Path(SAMPLE_FOLDER) / "overflow"
+
+    result = runner.invoke(
+        cli,
+        [
+            "-s",
+            Path(input_folder) / SLIDES_FN,
+            "-n",
+            Path(input_folder) / NOTES_FN,
+            "-o",
+            output_folder,
+        ],
+    )
+    assert result.exit_code == 0
+    assert output_folder.exists()
+    assert (output_folder / "index.html").exists()
