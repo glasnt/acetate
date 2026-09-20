@@ -48,7 +48,7 @@ generated
 2 directories, 6 files
 ```
 
-You can customise the HTML output, or use the `slides.yaml`` directly in things like static site generators. 
+You can customise the HTML output, or use the `slides.yaml` directly in things like static site generators. 
 
 ---
 
