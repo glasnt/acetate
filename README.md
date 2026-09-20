@@ -8,11 +8,12 @@ Take two PDFs -- one with slides, and one with slides and speaker notes -- and g
 
 Make for a nice format for reading slides in a webpage, allowing for richer interactions etc for people who learn better that way. 
 
+This is currently used in the writeups on [glasnt.com/talks](https://glasnt.com/talks).
 
 ## Invocation
 
 ```
-$ python acetate --help
+$ acetate --help
 Usage: acetate [OPTIONS]
 
 Options:
@@ -26,7 +27,7 @@ Options:
 Example from testing data: 
 
 ```
-$ python acetate \
+$ acetate \
     -s samples/google-slides/sample-slides.pdf \
     -n samples/google-slides/sample-notes.pdf
 ```
